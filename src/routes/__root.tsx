@@ -2,6 +2,7 @@ import { Outlet, createRootRoute, HeadContent, Scripts, Link } from "@tanstack/r
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { ScrollProgress } from "@/components/site/MotionExtras";
+import { AnimatedCursor } from "@/components/site/AnimatedCursor";
 
 import appCss from "../styles.css?url";
 
@@ -63,6 +64,7 @@ function RootComponent() {
       <Nav />
       <main><Outlet /></main>
       <Footer />
+      <AnimatedCursor />
     </>
   );
 }
