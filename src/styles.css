@@ -69,8 +69,8 @@
   --input: oklch(0.88 0.015 85);
   --ring: oklch(0.42 0.07 185);
 
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Calibri", "Carlito", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Calibri", "Carlito", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
 
   --gradient-hero: radial-gradient(at 80% 20%, oklch(0.42 0.07 185 / 0.18), transparent 55%),
                    radial-gradient(at 15% 85%, oklch(0.68 0.18 40 / 0.18), transparent 55%);

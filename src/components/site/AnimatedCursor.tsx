@@ -10,8 +10,9 @@ type CursorState = {
 function getInitialEnabled() {
   if (typeof window === "undefined") return false;
   const finePointer = window.matchMedia?.("(pointer: fine)").matches ?? false;
+  const canHover = window.matchMedia?.("(hover: hover)").matches ?? false;
   const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
-  return finePointer && !reducedMotion;
+  return (finePointer || canHover) && !reducedMotion;
 }
 
 export function AnimatedCursor() {
@@ -33,10 +34,11 @@ export function AnimatedCursor() {
     if (typeof window === "undefined") return;
 
     const mqFine = window.matchMedia?.("(pointer: fine)");
+    const mqHover = window.matchMedia?.("(hover: hover)");
     const mqReduce = window.matchMedia?.("(prefers-reduced-motion: reduce)");
 
     const onMediaChange = () => {
-      const enabled = (mqFine?.matches ?? false) && !(mqReduce?.matches ?? false);
+      const enabled = ((mqFine?.matches ?? false) || (mqHover?.matches ?? false)) && !(mqReduce?.matches ?? false);
       setState((s) => ({ ...s, enabled, visible: enabled ? s.visible : false, pressed: enabled ? s.pressed : false }));
     };
 
@@ -46,7 +48,11 @@ export function AnimatedCursor() {
       setState((s) => (s.visible ? s : { ...s, visible: true }));
     };
 
-    const onDown = () => setState((s) => ({ ...s, pressed: true }));
+    const onDown = (e: MouseEvent) => {
+      x.set(e.clientX);
+      y.set(e.clientY);
+      setState((s) => ({ ...s, pressed: true, visible: true }));
+    };
     const onUp = () => setState((s) => ({ ...s, pressed: false }));
     const onLeave = () => setState((s) => ({ ...s, visible: false, pressed: false }));
     const onEnter = () => setState((s) => ({ ...s, visible: s.enabled }));
@@ -54,6 +60,7 @@ export function AnimatedCursor() {
     onMediaChange();
 
     mqFine?.addEventListener("change", onMediaChange);
+    mqHover?.addEventListener("change", onMediaChange);
     mqReduce?.addEventListener("change", onMediaChange);
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mousedown", onDown);
@@ -64,6 +71,7 @@ export function AnimatedCursor() {
 
     return () => {
       mqFine?.removeEventListener("change", onMediaChange);
+      mqHover?.removeEventListener("change", onMediaChange);
       mqReduce?.removeEventListener("change", onMediaChange);
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mousedown", onDown);
